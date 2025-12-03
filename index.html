@@ -1,0 +1,2293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AETHER - Social Manga Platform</title>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js" integrity="sha384-rCn7bvTBiMpLX7QD6gzpZWFxbgfPxvTJPZLQm0h9U1Aq1M8f8Q0x6L5H9I8X8T9T" crossorigin="anonymous"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a0a3a 50%, #0a1a3a 100%);
+            color: #e0e0e0;
+            display: flex;
+        }
+
+        /* ========== SIDEBAR ========== */
+        .sidebar {
+            width: 280px;
+            background: rgba(15, 10, 30, 0.95);
+            border-right: 2px solid #7c3aed;
+            padding: 1.5rem 0.8rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            overflow-y: auto;
+            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(12px);
+            height: 100vh;
+        }
+
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #7c3aed, #3b82f6, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 1px;
+            text-align: center;
+            padding: 0 0.5rem 1rem;
+            border-bottom: 1px solid rgba(124, 58, 237, 0.3);
+        }
+
+        .sidebar-top {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            flex: 1;
+        }
+
+        .nav-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .sidebar-bottom {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(124, 58, 237, 0.3);
+        }
+
+        .nav-btn {
+            padding: 0.8rem 0.8rem;
+            background: rgba(124, 58, 237, 0.15);
+            border: 1px solid rgba(124, 58, 237, 0.4);
+            color: #e0e0e0;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            text-align: left;
+        }
+
+        .nav-btn:hover {
+            background: rgba(124, 58, 237, 0.3);
+            border-color: #7c3aed;
+            transform: translateX(6px);
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(135deg, #7c3aed, #3b82f6);
+            border-color: #7c3aed;
+            box-shadow: 0 0 15px rgba(124, 58, 237, 0.4);
+        }
+
+        .search-box {
+            padding: 0.7rem 0.8rem;
+            background: rgba(124, 58, 237, 0.1);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            color: #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            width: 100%;
+            font-family: inherit;
+        }
+
+        .search-box::placeholder {
+            color: #8080a0;
+        }
+
+        .search-box:focus {
+            outline: none;
+            background: rgba(124, 58, 237, 0.15);
+            border-color: #7c3aed;
+        }
+
+        .upload-btn, .logout-btn, .refresh-btn {
+            padding: 0.7rem 0.8rem;
+            background: linear-gradient(135deg, #7c3aed, #3b82f6);
+            border: none;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+            width: 100%;
+            text-align: center;
+        }
+
+        .upload-btn:hover, .logout-btn:hover, .refresh-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .logout-btn {
+            background: rgba(124, 58, 237, 0.15);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            color: #e0e0e0;
+        }
+
+        .refresh-btn {
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: #3b82f6;
+        }
+
+        .manga-action-btn {
+            padding: 0.3rem 0.6rem;
+            background: rgba(124, 58, 237, 0.2);
+            border: none;
+            color: #3b82f6;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: all 0.2s;
+        }
+
+        .manga-action-btn:hover {
+            background: rgba(124, 58, 237, 0.3);
+        }
+
+        .profile-pic-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #7c3aed, #3b82f6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin: 0 auto 1rem;
+            border: 2px solid rgba(124, 58, 237, 0.5);
+            overflow: hidden;
+        }
+
+        .profile-pic-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .stat-box {
+            text-align: center;
+        }
+
+        .stat-value {
+            color: #3b82f6;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .stat-label {
+            color: #b0b0d0;
+            font-size: 0.9rem;
+        }
+
+        .cards-section {
+            background: rgba(59, 130, 246, 0.05);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .cards-title {
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #3b82f6;
+        }
+
+        .cards-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .card-item {
+            background: rgba(124, 58, 237, 0.1);
+            border: 1px solid rgba(124, 58, 237, 0.2);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .card-item:hover {
+            background: rgba(124, 58, 237, 0.2);
+        }
+
+        .card-manga-name {
+            font-weight: 600;
+            color: #e0e0e0;
+            margin-bottom: 0.3rem;
+        }
+
+        .card-rating {
+            font-size: 0.85rem;
+            color: #b0b0d0;
+        }
+
+        .ownership-warning {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .ownership-label {
+            color: #b0b0d0;
+            margin-left: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .ip-display {
+            color: #3b82f6;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            padding: 0.8rem;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 8px;
+        }
+
+        .profile-header-box {
+            background: rgba(124, 58, 237, 0.1);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            border-radius: 16px;
+            padding: 2rem;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+        }
+
+        .profile-header-center {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .profile-name-display {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-email-display {
+            color: #b0b0d0;
+        }
+
+        .edit-profile-btn {
+            padding: 0.8rem 2rem;
+            background: linear-gradient(135deg, #7c3aed, #3b82f6);
+            border: none;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            width: 100%;
+        }
+
+        .edit-profile-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .empty-cards-message {
+            color: #8080a0;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        /* ========== MAIN ========== */
+        .main-container {
+            display: flex;
+            flex: 1;
+            gap: 0;
+            overflow: hidden;
+            flex-direction: column;
+        }
+
+        .page {
+            display: none;
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem 3rem;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .page.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ========== HOME ========== */
+        .home-page {
+            gap: 2rem;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        .home-content {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .home-title {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #7c3aed, #3b82f6, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 0;
+        }
+
+        .home-subtitle {
+            color: #b0b0d0;
+            font-size: 1.4rem;
+            margin: 0;
+        }
+
+        .showcase-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 1.5rem;
+            width: 100%;
+            max-width: 900px;
+            justify-items: center;
+        }
+
+        .manga-card {
+            background: rgba(124, 58, 237, 0.1);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            border-radius: 16px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+
+        .manga-card:hover {
+            background: rgba(124, 58, 237, 0.2);
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(124, 58, 237, 0.3);
+        }
+
+        .manga-icon {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .manga-title {
+            font-weight: 700;
+            color: #e0e0e0;
+            margin-bottom: 0.3rem;
+        }
+
+        .manga-info {
+            color: #b0b0d0;
+            font-size: 0.8rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #8080a0;
+            padding: 3rem;
+        }
+
+        /* ========== LIBRARY ========== */
+        .library-page {
+            gap: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #7c3aed, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .lib-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 1.5rem;
+            overflow-y: auto;
+            padding-right: 1rem;
+        }
+
+        /* ========== DISCOVER ========== */
+        .discover-page {
+            gap: 1.5rem;
+        }
+
+        .user-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+            overflow-y: auto;
+            padding-right: 1rem;
+        }
+
+        .user-card {
+            background: rgba(124, 58, 237, 0.1);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            border-radius: 16px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+
+        .user-card:hover {
+            background: rgba(124, 58, 237, 0.2);
+            transform: translateY(-8px);
+        }
+
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #7c3aed, #3b82f6);
+            margin: 0 auto 1rem;
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .user-location {
+            color: #b0b0d0;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+        }
+
+        .friend-btn {
+            padding: 0.6rem 1.2rem;
+            background: linear-gradient(135deg, #7c3aed, #3b82f6);
+            border: none;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .friend-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .friend-btn.added {
+            background: #10b981;
+        }
+
+        /* ========== CHAT ========== */
+        .chat-page {
+            flex-direction: row;
+            gap: 1.5rem;
+        }
+
+        .chat-sidebar {
+            width: 280px;
+            background: rgba(124, 58, 237, 0.1);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            border-radius: 16px;
+            padding: 1rem;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .chat-header {
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .chat-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            overflow-y: auto;
+        }
+
+        .chat-item {
+            padding: 0.8rem;
+            background: rgba(124, 58, 237, 0.15);
+            border: 1px solid rgba(124, 58, 237, 0.2);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .chat-item:hover {
+            background: rgba(124, 58, 237, 0.25);
+        }
+
+        .chat-item.active {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.3), rgba(59, 130, 246, 0.3));
+            border-color: #7c3aed;
+        }
+
+        .chat-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .chat-badge {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            background: rgba(124, 58, 237, 0.5);
+            border-radius: 4px;
+            font-size: 0.7rem;
+            color: #06b6d4;
+            font-weight: 600;
+        }
+
+        .chat-main {
+            flex: 1;
+            background: rgba(124, 58, 237, 0.1);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .msg {
+            display: flex;
+            gap: 0.5rem;
+            max-width: 70%;
+        }
+
+        .msg.sent {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .msg-bubble {
+            background: rgba(124, 58, 237, 0.3);
+            padding: 0.8rem 1.2rem;
+            border-radius: 12px;
+            word-wrap: break-word;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .msg.sent .msg-bubble {
+            background: linear-gradient(135deg, #7c3aed, #3b82f6);
+            color: white;
+        }
+
+        .encryption-badge {
+            font-size: 0.7rem;
+            color: #10b981;
+            font-weight: 600;
+        }
+
+        .chat-input-area {
+            padding: 1rem;
+            border-top: 1px solid rgba(124, 58, 237, 0.3);
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 0.8rem;
+            background: rgba(124, 58, 237, 0.15);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            color: #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-family: inherit;
+        }
+
+        .chat-input::placeholder {
+            color: #707090;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            background: rgba(124, 58, 237, 0.2);
+            border-color: #7c3aed;
+        }
+
+        .chat-send {
+            padding: 0.8rem 1.5rem;
+            background: linear-gradient(135deg, #7c3aed, #3b82f6);
+            border: none;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        /* ========== PROFILE ========== */
+        .profile-page {
+            gap: 2rem;
+        }
+
+        .profile-header {
+            background: rgba(124, 58, 237, 0.15);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            border-radius: 16px;
+            padding: 2rem;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            display: flex;
+            gap: 2rem;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #7c3aed, #3b82f6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .profile-name {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-email {
+            color: #b0b0d0;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+
+        .profile-stats {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .stat {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-label {
+            color: #b0b0d0;
+            font-size: 0.85rem;
+        }
+
+        .stat-value {
+            color: #3b82f6;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .profile-section {
+            background: rgba(124, 58, 237, 0.1);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            border-radius: 16px;
+            padding: 1.5rem;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+        }
+
+        .friends-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 1rem;
+        }
+
+        .friend-card {
+            background: rgba(124, 58, 237, 0.15);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .friend-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #7c3aed, #3b82f6);
+            margin: 0 auto 0.5rem;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .friend-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* ========== READER ========== */
+        .reader-page {
+            gap: 1rem;
+        }
+
+        .reader-header {
+            background: rgba(124, 58, 237, 0.1);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            border-radius: 16px;
+            padding: 1rem;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .reader-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .manga-content {
+            flex: 1;
+            background: rgba(124, 58, 237, 0.08);
+            border: 1px solid rgba(124, 58, 237, 0.2);
+            border-radius: 16px;
+            padding: 2rem;
+            overflow-y: auto;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: #d0d0e0;
+        }
+
+        .reader-controls {
+            display: flex;
+            gap: 1rem;
+            background: rgba(124, 58, 237, 0.1);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            border-radius: 16px;
+            padding: 1rem;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            align-items: center;
+        }
+
+        .control-btn {
+            padding: 0.8rem 1.5rem;
+            background: rgba(124, 58, 237, 0.15);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            color: #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover:not(:disabled) {
+            background: rgba(124, 58, 237, 0.25);
+        }
+
+        .control-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .page-counter {
+            margin-left: auto;
+            color: #b0b0d0;
+            font-weight: 600;
+        }
+
+        .feedback-btn {
+            padding: 0.8rem 1.5rem;
+            background: linear-gradient(135deg, #7c3aed, #3b82f6);
+            border: none;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .feedback-btn:disabled {
+            opacity: 0.5;
+        }
+
+        /* ========== MODAL ========== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            -webkit-backdrop-filter: blur(8px);
+            backdrop-filter: blur(8px);
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, rgba(15, 10, 30, 0.98), rgba(26, 10, 58, 0.98));
+            border: 2px solid #7c3aed;
+            padding: 2.5rem;
+            border-radius: 20px;
+            max-height: 90vh;
+            overflow-y: auto;
+            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 15px 50px rgba(124, 58, 237, 0.4);
+            max-width: 600px;
+            width: 90%;
+        }
+
+        .modal-title {
+            font-size: 1.6rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #7c3aed, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            color: #b0b0d0;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.9rem;
+            background: rgba(124, 58, 237, 0.1);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            color: #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .form-input::placeholder {
+            color: #707090;
+        }
+
+        .form-input:focus {
+            outline: none;
+            background: rgba(124, 58, 237, 0.15);
+            border-color: #7c3aed;
+            box-shadow: 0 0 15px rgba(124, 58, 237, 0.3);
+        }
+
+        .form-input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: linear-gradient(90deg, #7c3aed, #3b82f6);
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+            cursor: pointer;
+        }
+
+        .form-input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #3b82f6;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(124, 58, 237, 0.5);
+        }
+
+        .rating-display {
+            text-align: center;
+            color: #3b82f6;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-top: 0.3rem;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn-primary {
+            flex: 1;
+            padding: 1rem;
+            background: linear-gradient(135deg, #7c3aed, #3b82f6);
+            border: none;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            flex: 1;
+            padding: 1rem;
+            background: rgba(124, 58, 237, 0.15);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            color: #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(124, 58, 237, 0.25);
+        }
+
+        /* ========== TERMS & CONDITIONS STYLING ========== */
+        .terms-content {
+            max-height: 85vh;
+            overflow-y: auto;
+            max-width: 750px;
+        }
+
+        .terms-scroll {
+            background: rgba(124, 58, 237, 0.05);
+            border: 1px solid rgba(124, 58, 237, 0.2);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            max-height: 50vh;
+            overflow-y: auto;
+            color: #d0d0d0;
+            line-height: 1.8;
+        }
+
+        .terms-scroll h3 {
+            color: #7c3aed;
+            font-size: 1.1rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.8rem;
+            font-weight: 700;
+            border-left: 3px solid #3b82f6;
+            padding-left: 0.8rem;
+        }
+
+        .terms-scroll h3:first-child {
+            margin-top: 0;
+        }
+
+        .terms-scroll p {
+            margin-bottom: 0.8rem;
+            color: #c0c0d0;
+            font-size: 0.95rem;
+        }
+
+        .terms-scroll ul {
+            list-style: none;
+            margin-bottom: 1rem;
+            margin-left: 1rem;
+        }
+
+        .terms-scroll li {
+            margin-bottom: 0.5rem;
+            color: #b0b0c0;
+            font-size: 0.9rem;
+            padding-left: 0.5rem;
+        }
+
+        .terms-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(124, 58, 237, 0.3);
+            font-size: 0.85rem;
+            color: #909090;
+        }
+
+        .terms-agreement {
+            background: rgba(124, 58, 237, 0.1);
+            border: 1px solid rgba(124, 58, 237, 0.2);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .terms-agreement label {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            cursor: pointer;
+            color: #d0d0d0;
+            font-weight: 500;
+        }
+
+        .terms-agreement input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #7c3aed;
+        }
+
+        .error-text {
+            color: #f87171;
+            font-size: 0.8rem;
+            margin-top: 0.3rem;
+        }
+
+        .hidden-form {
+            display: none;
+        }
+
+        .hidden-file {
+            display: none;
+        }
+
+        .success-toast {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 1.5rem 2rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+            z-index: 3000;
+            animation: slideIn 0.4s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .password-strength {
+            display: inline-block;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 0.3rem;
+        }
+
+        .strength-weak {
+            background: #f87171;
+            color: white;
+        }
+
+        .strength-medium {
+            background: #fbbf24;
+            color: black;
+        }
+
+        .strength-strong {
+            background: #10b981;
+            color: white;
+        }
+
+        /* ========== OWNERSHIP CHECKBOX ========== */
+        .ownership-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .ownership-checkbox {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            margin-right: 0.8rem;
+        }
+
+        /* ========== PROFILE PICTURE PREVIEW ========== */
+        .profile-preview-container {
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .profile-pic-display {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-pic-text {
+            color: #b0b0d0;
+            font-size: 0.9rem;
+        }
+
+        .profile-pic-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        @media (max-width: 768px) {
+            .chat-page {
+                flex-direction: column;
+            }
+
+            .chat-sidebar {
+                width: 100%;
+                max-height: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="logo">✨ AETHER</div>
+        
+        <div class="sidebar-top">
+            <div class="nav-buttons">
+                <button class="nav-btn active" onclick="showPage('home')">🏠 Home</button>
+                <button class="nav-btn" onclick="showPage('library')">📚 Library</button>
+                <button class="nav-btn" onclick="showPage('discover')">🌍 Discover</button>
+                <button class="nav-btn" onclick="showPage('chat')">💬 Chat</button>
+                <button class="nav-btn" onclick="showPage('profile')">👤 Profile</button>
+            </div>
+        </div>
+
+        <div class="sidebar-bottom">
+            <input type="text" class="search-box" id="searchBox" placeholder="🔍 Search..." onkeyup="searchManga()">
+            <button class="upload-btn" onclick="uploadManga()">📤 Upload</button>
+            <button class="refresh-btn" onclick="manualRefresh()" title="Refresh & discover new manga">🔄 Refresh</button>
+            <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+        </div>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main-container">
+        <!-- HOME -->
+        <div class="page active" data-page="home">
+            <div class="home-page">
+                <div class="home-content">
+                    <div class="home-title">AETHER</div>
+                    <div class="home-subtitle">Discover & Share Manga Stories</div>
+                </div>
+                <div class="showcase-grid" id="showcase">
+                    <div class="empty-state">📖 Upload manga to get started!</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- LIBRARY -->
+        <div class="page" data-page="library">
+            <div class="library-page">
+                <div class="section-title">📚 Your Library</div>
+                <div class="lib-grid" id="library">
+                    <div class="empty-state">Your library is empty</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DISCOVER -->
+        <div class="page" data-page="discover">
+            <div class="discover-page">
+                <div class="section-title">🌍 Discover People</div>
+                <div class="user-grid" id="nearbyUsers">
+                    <div class="empty-state">No users nearby</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CHAT -->
+        <div class="page" data-page="chat">
+            <div class="chat-page">
+                <div class="chat-sidebar">
+                    <div class="chat-header">💬 Chats</div>
+                    <div class="chat-list" id="chatList">
+                        <div class="empty-state">No conversations</div>
+                    </div>
+                </div>
+                <div class="chat-main">
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="empty-state">Select a chat to start messaging</div>
+                    </div>
+                    <div class="chat-input-area" id="chatInputArea">
+                        <input type="text" class="chat-input" id="msgInput" placeholder="Type message..." maxlength="500">
+                        <select id="chatType" title="Chat type">
+                            <option value="public">Public</option>
+                            <option value="private">Private (E2E)</option>
+                        </select>
+                        <button class="chat-send" onclick="sendMessage()">Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PROFILE -->
+        <div class="page" data-page="profile">
+            <div class="profile-page">
+                <div class="profile-header">
+                    <div class="profile-avatar" id="profileAvatar">👤</div>
+                    <div class="profile-info">
+                        <div class="profile-name" id="profileName">Not Logged In</div>
+                        <div class="profile-email" id="profileEmail">-</div>
+                        <div id="userIPDisplay" class="ip-display"></div>
+                        <div class="profile-stats">
+                            <div class="stat">
+                                <div class="stat-label">Friends</div>
+                                <div class="stat-value" id="friendCount">0</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-label">Manga</div>
+                                <div class="stat-value" id="mangaCount">0</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-label">Feedbacks</div>
+                                <div class="stat-value" id="feedbackCount">0</div>
+                            </div>
+                        </div>
+                        <button class="edit-profile-btn" onclick="editProfile()">✏️ Edit Profile</button>
+                    </div>
+                </div>
+                    </div>
+                </div>
+
+                <div class="profile-section">
+                    <div class="section-title">👥 Friends</div>
+                    <div class="friends-grid" id="friendsList">
+                        <div class="empty-state">No friends yet</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- READER -->
+        <div class="page" data-page="reader">
+            <div class="reader-page">
+                <div class="reader-header">
+                    <button class="control-btn" onclick="showPage('library')">← Back</button>
+                    <div class="reader-title" id="readerTitle">-</div>
+                </div>
+                <div class="manga-content" id="mangaContent">Select manga to read</div>
+                <div class="reader-controls">
+                    <button class="control-btn" id="prevBtn" onclick="prevPage()" disabled>← Previous</button>
+                    <div class="page-counter" id="pageCounter">Page 0/0</div>
+                    <button class="control-btn" id="nextBtn" onclick="nextPage()" disabled>Next →</button>
+                    <button class="feedback-btn" id="feedbackBtn" onclick="openFeedback()" disabled>💬 Feedback</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AUTH MODAL -->
+    <div class="modal active" id="authModal">
+        <div class="modal-content">
+            <div class="modal-title" id="authTitle">Create Account</div>
+            
+            <div id="signupForm">
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-input" id="email" placeholder="your@email.com" maxlength="100">
+                    <div class="error-text" id="emailError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Password (12+ chars, uppercase, number, special char)</label>
+                    <input type="password" class="form-input" id="password" placeholder="••••••••••••" maxlength="128" oninput="checkPassword()">
+                    <div id="strengthMeter"></div>
+                    <div class="error-text" id="passwordError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Username</label>
+                    <input type="text" class="form-input" id="username" placeholder="Your nickname" maxlength="50">
+                    <div class="error-text" id="usernameError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Location (for discovering nearby users)</label>
+                    <input type="text" class="form-input" id="location" placeholder="City, Country" maxlength="100">
+                </div>
+
+                <div class="modal-buttons">
+                    <button class="btn-primary" onclick="signup()">Create Account</button>
+                    <button class="btn-secondary" onclick="toggleForm()">Already have account?</button>
+                </div>
+            </div>
+
+            <div id="loginForm" class="hidden-form">
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-input" id="loginEmail" placeholder="your@email.com">
+                    <div class="error-text" id="loginEmailError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-input" id="loginPassword" placeholder="••••••••••••">
+                    <div class="error-text" id="loginPasswordError"></div>
+                </div>
+
+                <div class="modal-buttons">
+                    <button class="btn-primary" onclick="login()">Login</button>
+                    <button class="btn-secondary" onclick="toggleForm()">Create New Account</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TERMS & CONDITIONS MODAL -->
+    <div class="modal" id="termsModal">
+        <div class="modal-content terms-content">
+            <div class="modal-title">📋 Terms & Conditions</div>
+            
+            <div class="terms-scroll">
+                <h3>1️⃣ Data Collection and Usage</h3>
+                <p>Your data is collected and stored on AETHER servers. This includes your email, username, profile picture, manga content, and feedback. We use your data for:</p>
+                <ul>
+                    <li>✓ Platform improvement and feature development</li>
+                    <li>✓ Providing personalized recommendations</li>
+                    <li>✓ Security and fraud prevention</li>
+                    <li>✓ Technical support and customer service</li>
+                    <li>✓ Analytics and statistical analysis</li>
+                </ul>
+
+                <h3>2️⃣ Government Requests and Legal Compliance</h3>
+                <p>We may provide user data to government agencies and law enforcement when required by law. This includes:</p>
+                <ul>
+                    <li>✓ Court orders and legal subpoenas</li>
+                    <li>✓ National security investigations</li>
+                    <li>✓ Law enforcement requests with proper legal authority</li>
+                    <li>✓ User notification when legally permitted</li>
+                    <li>✓ Transparency reports published regularly</li>
+                </ul>
+
+                <h3>3️⃣ Data Security Measures</h3>
+                <p>We implement comprehensive security measures to protect your data:</p>
+                <ul>
+                    <li>✓ Encrypted connections (HTTPS/SSL protocols)</li>
+                    <li>✓ Password hashing using industry standards (bcryptjs)</li>
+                    <li>✓ Regular security audits and penetration testing</li>
+                    <li>✓ Firewall protection and intrusion detection systems</li>
+                    <li>✓ Data backup and disaster recovery procedures</li>
+                </ul>
+
+                <h3>4️⃣ Content Ownership and Rights</h3>
+                <p>For content you upload (manga, feedback, images):</p>
+                <ul>
+                    <li>✓ You are the original owner of your content</li>
+                    <li>✓ Copyrighted material upload is STRICTLY FORBIDDEN</li>
+                    <li>✓ AETHER receives non-exclusive rights to display content on the platform</li>
+                    <li>✓ You may delete your content at any time</li>
+                    <li>✓ Copyright infringement results in permanent account suspension</li>
+                </ul>
+
+                <h3>5️⃣ Prohibited User Conduct</h3>
+                <p>The following activities are strictly prohibited on the platform:</p>
+                <ul>
+                    <li>❌ Harassment, bullying, hate speech, or discrimination</li>
+                    <li>❌ Sexual content or explicit material</li>
+                    <li>❌ Violence or dangerous content</li>
+                    <li>❌ Spam, scams, or fraudulent activity</li>
+                    <li>❌ Fake followers or bot accounts</li>
+                    <li>❌ Hacking or unauthorized access attempts</li>
+                    <li>❌ Spreading misinformation or false information</li>
+                    <li>❌ Doxxing or sharing personal information</li>
+                </ul>
+
+                <h3>6️⃣ Account Termination and Banning</h3>
+                <p>We may suspend or terminate your account if you:</p>
+                <ul>
+                    <li>🚫 Violate these Terms & Conditions</li>
+                    <li>🚫 Engage in illegal activity</li>
+                    <li>🚫 Submit multiple false reports</li>
+                    <li>🚫 Damage or disrupt the platform</li>
+                    <li>🚫 Permanent bans remove all account data and access</li>
+                    <li>🚫 An appeal process is available for reviewed cases</li>
+                </ul>
+
+                <h3>7️⃣ Third-Party Services and APIs</h3>
+                <p>AETHER uses the following third-party services:</p>
+                <ul>
+                    <li>🔗 IP.ipify - For IP address detection and geolocation</li>
+                    <li>🔗 AbuseIPDB - For VPN and proxy detection</li>
+                    <li>🔗 MongoDB - For secure database storage</li>
+                    <li>🔗 These services' terms and conditions also apply to your use</li>
+                </ul>
+
+                <h3>8️⃣ Limitation of Liability</h3>
+                <p>AETHER is provided on an "AS IS" basis. Please note:</p>
+                <ul>
+                    <li>⚠️ We are not responsible for any losses or damages resulting from platform use</li>
+                    <li>⚠️ We are not liable for server downtime, data loss, or technical errors</li>
+                    <li>⚠️ We are not responsible for third-party content or external links</li>
+                    <li>⚠️ We reserve the right to modify terms with notice to users</li>
+                </ul>
+
+                <h3>9️⃣ Privacy and User Rights</h3>
+                <p>Your privacy is our priority:</p>
+                <ul>
+                    <li>🔒 Your email address is never publicly displayed</li>
+                    <li>🔒 Location information is optional</li>
+                    <li>🔒 Profile visibility settings are customizable</li>
+                    <li>🔒 Friend-only content options are available</li>
+                    <li>🔒 You may delete your account at any time</li>
+                </ul>
+
+                <h3>🔟 Policy Updates and Changes</h3>
+                <p>We may update these Terms & Conditions as follows:</p>
+                <ul>
+                    <li>📢 Updates will be announced via email notification</li>
+                    <li>📢 A 30-day notice period will be provided</li>
+                    <li>📢 Continued platform use constitutes acceptance of changes</li>
+                    <li>📢 The exact effective date will be specified</li>
+                </ul>
+
+                <h3>1️⃣1️⃣ Contact and Support</h3>
+                <p>For any questions or concerns:</p>
+                <ul>
+                    <li>📧 Email: support@aether.app</li>
+                    <li>💬 In-app support form available 24/7</li>
+                    <li>📞 Customer support team available round the clock</li>
+                    <li>⏱️ Average response time: 24-48 hours</li>
+                </ul>
+
+                <h3>1️⃣2️⃣ Governing Law and Jurisdiction</h3>
+                <p>These Terms & Conditions are governed by:</p>
+                <ul>
+                    <li>⚖️ The laws applicable in India</li>
+                    <li>⚖️ Jurisdiction rests with Indian courts</li>
+                    <li>⚖️ Alternative dispute resolution methods are available</li>
+                </ul>
+
+                <div class="terms-footer">
+                    <p>Last Updated: November 29, 2025</p>
+                    <p>Version: 1.0.0</p>
+                </div>
+            </div>
+
+            <div class="terms-agreement">
+                <label>
+                    <input type="checkbox" id="agreeTerms">
+                    <span>✅ I have read and agree to all Terms & Conditions</span>
+                </label>
+            </div>
+
+            <div class="modal-buttons">
+                <button class="btn-primary" id="acceptTermsBtn" onclick="acceptTerms()" disabled>Accept & Continue</button>
+                <button class="btn-secondary" onclick="declineTerms()">Decline</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FEEDBACK MODAL -->
+    <div class="modal" id="feedbackModal">
+        <div class="modal-content">
+            <div class="modal-title">💬 Your Feedback</div>
+
+            <div class="form-group">
+                <label class="form-label">Story Quality (0-10)</label>
+                <input type="range" class="form-input" id="storyRating" min="0" max="10" value="5" oninput="updateRating('story')">
+                <div class="rating-display" id="storyDisplay">5/10</div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Art & Visuals (0-10)</label>
+                <input type="range" class="form-input" id="artRating" min="0" max="10" value="5" oninput="updateRating('art')">
+                <div class="rating-display" id="artDisplay">5/10</div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Characters (0-10)</label>
+                <input type="range" class="form-input" id="charRating" min="0" max="10" value="5" oninput="updateRating('char')">
+                <div class="rating-display" id="charDisplay">5/10</div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Thoughts</label>
+                <input type="text" class="form-input" id="thoughts" placeholder="Your thoughts..." maxlength="300">
+            </div>
+
+            <div class="modal-buttons">
+                <button class="btn-primary" onclick="submitFeedback()">✓ Submit & Download</button>
+                <button class="btn-secondary" onclick="closeFeedback()">✕ Close</button>
+            </div>
+        </div>
+    </div>
+
+    <input type="file" id="fileInput" accept=".txt,.md" class="hidden-file">
+
+    <script>
+        // ========== STATE ==========
+        const state = {
+            user: null,
+            mangas: [],
+            friends: [],
+            nearbyUsers: [],
+            chats: {},
+            currentChat: null,
+            currentManga: null,
+            currentPage: 0,
+            allChars: 2500
+        };
+
+        // ========== STORAGE ==========
+        function saveState() {
+            localStorage.setItem('aether_user', JSON.stringify(state.user));
+            localStorage.setItem('aether_mangas', JSON.stringify(state.mangas));
+            localStorage.setItem('aether_friends', JSON.stringify(state.friends));
+        }
+
+        function loadState() {
+            const u = localStorage.getItem('aether_user');
+            const m = localStorage.getItem('aether_mangas');
+            const f = localStorage.getItem('aether_friends');
+            
+            if (u) state.user = JSON.parse(u);
+            if (m) state.mangas = JSON.parse(m);
+            if (f) state.friends = JSON.parse(f);
+        }
+
+        // ========== VALIDATION ==========
+        function validateEmail(e) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e) && e.length <= 100;
+        }
+
+        function validatePassword(p) {
+            return /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,}$/.test(p);
+        }
+
+        function checkPassword() {
+            const pwd = document.getElementById('password').value;
+            const meter = document.getElementById('strengthMeter');
+            
+            if (!pwd) {
+                meter.innerHTML = '';
+                return;
+            }
+
+            let strength = 0;
+            if (pwd.length >= 12) strength++;
+            if (pwd.length >= 16) strength++;
+            if (/[A-Z]/.test(pwd) && /[a-z]/.test(pwd)) strength++;
+            if (/\d/.test(pwd)) strength++;
+            if (/@$!%*?&/.test(pwd)) strength++;
+
+            let text = 'Weak', css = 'strength-weak';
+            if (strength >= 4) {
+                text = 'Strong';
+                css = 'strength-strong';
+            } else if (strength >= 2) {
+                text = 'Medium';
+                css = 'strength-medium';
+            }
+
+            meter.innerHTML = `<span class="password-strength ${css}">${text}</span>`;
+        }
+
+        // ========== AUTH ==========
+        function toggleForm() {
+            const signup = document.getElementById('signupForm');
+            const login = document.getElementById('loginForm');
+            const title = document.getElementById('authTitle');
+
+            if (signup.style.display === 'none') {
+                signup.style.display = 'block';
+                login.style.display = 'none';
+                title.textContent = 'Create Account';
+            } else {
+                signup.style.display = 'none';
+                login.style.display = 'block';
+                title.textContent = 'Login';
+            }
+        }
+
+        function signup() {
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const username = document.getElementById('username').value.trim();
+            const location = document.getElementById('location').value.trim() || 'Unknown';
+
+            document.getElementById('emailError').textContent = '';
+            document.getElementById('passwordError').textContent = '';
+            document.getElementById('usernameError').textContent = '';
+
+            if (!validateEmail(email)) {
+                document.getElementById('emailError').textContent = 'Invalid email';
+                return;
+            }
+
+            if (!validatePassword(password)) {
+                document.getElementById('passwordError').textContent = 'Password too weak';
+                return;
+            }
+
+            if (username.length < 3) {
+                document.getElementById('usernameError').textContent = 'Min 3 characters';
+                return;
+            }
+
+            // Detect IP
+            fetch('https://api.ipify.org?format=json')
+                .then(r => r.json())
+                .then(data => {
+                    state.user = {
+                        email,
+                        username,
+                        location,
+                        friends: [],
+                        mangas: 0,
+                        feedbacks: 0,
+                        avatar: '👤',
+                        ip: data.ip,
+                        lastLogin: new Date().toLocaleString(),
+                        profilePic: null,
+                        termsAccepted: false
+                    };
+
+                    // Show Terms & Conditions modal instead of closing auth
+                    document.getElementById('authModal').classList.remove('active');
+                    document.getElementById('termsModal').classList.add('active');
+                    document.getElementById('agreeTerms').checked = false;
+                    updateAcceptButtonState();
+                })
+                .catch(() => {
+                    state.user = {
+                        email,
+                        username,
+                        location,
+                        friends: [],
+                        mangas: 0,
+                        feedbacks: 0,
+                        avatar: '👤',
+                        ip: 'Unknown',
+                        lastLogin: new Date().toLocaleString(),
+                        profilePic: null,
+                        termsAccepted: false
+                    };
+                    // Show Terms & Conditions modal
+                    document.getElementById('authModal').classList.remove('active');
+                    document.getElementById('termsModal').classList.add('active');
+                    document.getElementById('agreeTerms').checked = false;
+                    updateAcceptButtonState();
+                });
+        }
+
+        function login() {
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            document.getElementById('loginEmailError').textContent = '';
+            document.getElementById('loginPasswordError').textContent = '';
+
+            if (!email || !password) {
+                document.getElementById('loginEmailError').textContent = 'Enter credentials';
+                return;
+            }
+
+            // Detect IP
+            fetch('https://api.ipify.org?format=json')
+                .then(r => r.json())
+                .then(data => {
+                    state.user = {
+                        email,
+                        username: email.split('@')[0],
+                        location: 'Unknown',
+                        friends: [],
+                        mangas: 0,
+                        feedbacks: 0,
+                        avatar: '👤',
+                        ip: data.ip,
+                        lastLogin: new Date().toLocaleString(),
+                        profilePic: null
+                    };
+
+                    saveState();
+                    document.getElementById('authModal').classList.remove('active');
+                    updateProfile();
+                    updateNearbyUsers();
+                    showToast('Logged in successfully!');
+                    startAutoRefresh();
+                })
+                .catch(() => {
+                    state.user = {
+                        email,
+                        username: email.split('@')[0],
+                        location: 'Unknown',
+                        friends: [],
+                        mangas: 0,
+                        feedbacks: 0,
+                        avatar: '👤',
+                        ip: 'Unknown',
+                        lastLogin: new Date().toLocaleString(),
+                        profilePic: null
+                    };
+                    saveState();
+                    document.getElementById('authModal').classList.remove('active');
+                    updateProfile();
+                    updateNearbyUsers();
+                    showToast('Logged in!');
+                    startAutoRefresh();
+                });
+        }
+
+        function logout() {
+            state.user = null;
+            localStorage.clear();
+            document.getElementById('authModal').classList.add('active');
+            showToast('Logged out');
+        }
+
+        // ========== TERMS & CONDITIONS ==========
+        function updateAcceptButtonState() {
+            const checkbox = document.getElementById('agreeTerms');
+            const button = document.getElementById('acceptTermsBtn');
+            button.disabled = !checkbox.checked;
+        }
+
+        document.addEventListener('change', function(e) {
+            if (e.target.id === 'agreeTerms') {
+                updateAcceptButtonState();
+            }
+        });
+
+        function acceptTerms() {
+            if (!document.getElementById('agreeTerms').checked) {
+                showToast('Please accept terms first');
+                return;
+            }
+
+            state.user.termsAccepted = true;
+            saveState();
+            document.getElementById('termsModal').classList.remove('active');
+            updateProfile();
+            updateNearbyUsers();
+            showToast('✅ Welcome to AETHER! Account created successfully!');
+            startAutoRefresh();
+        }
+
+        function declineTerms() {
+            state.user = null;
+            localStorage.clear();
+            document.getElementById('termsModal').classList.remove('active');
+            document.getElementById('authModal').classList.add('active');
+            showToast('⚠️ You must accept terms to continue');
+        }
+
+        // ========== PAGE NAVIGATION ==========
+        function showPage(page) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelector(`[data-page="${page}"]`).classList.add('active');
+
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if (page === 'discover') updateNearbyUsers();
+            if (page === 'home') updateShowcase();
+            if (page === 'library') updateLibrary();
+        }
+
+        // ========== HOME WITH AUTO-REFRESH & SHARE LINKS ==========
+        function updateShowcase() {
+            const showcase = document.getElementById('showcase');
+            if (state.mangas.length === 0) {
+                showcase.innerHTML = '<div class="empty-state">📖 Upload manga to get started!</div>';
+                return;
+            }
+
+            showcase.innerHTML = state.mangas.map((m, i) => `
+                <div class="manga-card" onclick="readManga(${i})">
+                    <div class="manga-icon">📖</div>
+                    <div class="manga-title">${m.title}</div>
+                    <div class="manga-info">${m.pages} pages</div>
+                    <div class="manga-info">By ${m.author || 'Unknown'}</div>
+                    <button class="manga-action-btn" onclick="event.stopPropagation(); shareLink('${m.id}', '${m.title}')">🔗 Share</button>
+                </div>
+            `).join('');
+
+            // Update timestamp
+            const timestamp = document.getElementById('lastRefreshTime');
+            if (timestamp) {
+                timestamp.textContent = new Date().toLocaleTimeString();
+            }
+        }
+
+        function shareLink(mangaId, mangaTitle) {
+            const link = `${window.location.href}?manga=${mangaId}`;
+            navigator.clipboard.writeText(link).then(() => {
+                showToast(`✓ Link copied! Share "${mangaTitle}" with friends!`);
+            }).catch(() => {
+                alert(`Link: ${link}\n\nShare this with your friends!`);
+            });
+        }
+
+        let autoRefreshInterval = null;
+
+        function startAutoRefresh() {
+            if (autoRefreshInterval) clearInterval(autoRefreshInterval);
+            autoRefreshInterval = setInterval(() => {
+                if (document.querySelector('[data-page="home"].active')) {
+                    updateShowcase();
+                }
+            }, 60000); // Every 60 seconds
+        }
+
+        function manualRefresh() {
+            updateShowcase();
+            updateNearbyUsers();
+            showToast('✓ Refreshed!');
+        }
+
+        // ========== LIBRARY WITH AUTHOR INFO ==========
+        function updateLibrary() {
+            const lib = document.getElementById('library');
+            if (state.mangas.length === 0) {
+                lib.innerHTML = '<div class="empty-state">Your library is empty</div>';
+                return;
+            }
+
+            lib.innerHTML = state.mangas.map((m, i) => `
+                <div class="manga-card" onclick="readManga(${i})">
+                    <div class="manga-icon">📖</div>
+                    <div class="manga-title">${m.title}</div>
+                    <div class="manga-info">${m.pages} pages</div>
+                    <div class="manga-info">By ${m.author || 'Unknown'}</div>
+                </div>
+            `).join('');
+        }
+
+        function searchManga() {
+            const query = document.getElementById('searchBox').value.toLowerCase();
+            document.querySelectorAll('.manga-card').forEach(card => {
+                const title = card.querySelector('.manga-title').textContent.toLowerCase();
+                card.style.display = title.includes(query) ? '' : 'none';
+            });
+        }
+
+        // ========== UPLOAD WITH ADVANCED FEATURES ==========
+        function uploadManga() {
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.id = 'uploadModal';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-title">📤 Upload Manga</div>
+                    <form onsubmit="handleUploadForm(event)">
+                        <div class="form-group">
+                            <label class="form-label">Manga Title</label>
+                            <input type="text" id="uploadTitle" class="form-input" placeholder="Enter manga title" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Author Name</label>
+                            <input type="text" id="uploadAuthor" class="form-input" placeholder="Your name or pen name" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">📖 Select Manga File (.txt or .md)</label>
+                            <input type="file" id="uploadFile" class="form-input" accept=".txt,.md" required>
+                        </div>
+                        <div class="ownership-warning">
+                            <label class="ownership-label">
+                                <input type="checkbox" id="ownershipCheckbox" class="ownership-checkbox">
+                                <span class="ownership-label">✓ This is my original work and I own the rights</span>
+                            </label>
+                        </div>
+                        <div class="modal-buttons">
+                            <button type="submit" class="btn-primary">✓ Upload Manga</button>
+                            <button type="button" class="btn-secondary" onclick="document.getElementById('uploadModal').remove()">✕ Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function handleUploadForm(e) {
+            e.preventDefault();
+            const ownership = document.getElementById('ownershipCheckbox').checked;
+            
+            if (!ownership) {
+                alert('❌ You must confirm this is your original work to upload.');
+                return;
+            }
+
+            const title = document.getElementById('uploadTitle').value.trim();
+            const author = document.getElementById('uploadAuthor').value.trim();
+            const fileInput = document.getElementById('uploadFile');
+            const file = fileInput.files[0];
+
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (evt) => {
+                const content = evt.target.result;
+                const pages = Math.ceil(content.length / state.allChars);
+                const uniqueId = `manga_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+
+                state.mangas.push({
+                    id: uniqueId,
+                    title,
+                    author,
+                    content,
+                    pages,
+                    feedback: null,
+                    isOriginal: true,
+                    uploadedBy: state.user.username,
+                    uploadDate: new Date().toLocaleDateString()
+                });
+
+                state.user.mangas++;
+                saveState();
+                updateShowcase();
+                updateLibrary();
+                document.getElementById('uploadModal').remove();
+                showToast(`✓ "${title}" uploaded by ${author}!`);
+            };
+
+            reader.readAsText(file);
+        }
+
+        // ========== READER ==========
+        function readManga(idx) {
+            state.currentManga = idx;
+            state.currentPage = 0;
+
+            const manga = state.mangas[idx];
+            document.getElementById('readerTitle').textContent = manga.title;
+
+            const start = state.currentPage * state.allChars;
+            const end = start + state.allChars;
+            document.getElementById('mangaContent').textContent = manga.content.substring(start, end);
+            document.getElementById('pageCounter').textContent = `Page ${state.currentPage + 1}/${manga.pages}`;
+
+            document.getElementById('prevBtn').disabled = state.currentPage === 0;
+            document.getElementById('nextBtn').disabled = state.currentPage === manga.pages - 1;
+            document.getElementById('feedbackBtn').disabled = false;
+
+            showPage('reader');
+        }
+
+        function prevPage() {
+            const manga = state.mangas[state.currentManga];
+            if (state.currentPage > 0) {
+                state.currentPage--;
+                const start = state.currentPage * state.allChars;
+                const end = start + state.allChars;
+                document.getElementById('mangaContent').textContent = manga.content.substring(start, end);
+                document.getElementById('pageCounter').textContent = `Page ${state.currentPage + 1}/${manga.pages}`;
+                document.getElementById('prevBtn').disabled = state.currentPage === 0;
+                document.getElementById('nextBtn').disabled = false;
+            }
+        }
+
+        function nextPage() {
+            const manga = state.mangas[state.currentManga];
+            if (state.currentPage < manga.pages - 1) {
+                state.currentPage++;
+                const start = state.currentPage * state.allChars;
+                const end = start + state.allChars;
+                document.getElementById('mangaContent').textContent = manga.content.substring(start, end);
+                document.getElementById('pageCounter').textContent = `Page ${state.currentPage + 1}/${manga.pages}`;
+                document.getElementById('nextBtn').disabled = state.currentPage === manga.pages - 1;
+                document.getElementById('prevBtn').disabled = false;
+            }
+        }
+
+        // ========== FEEDBACK WITH CUSTOMIZATION & FRIEND VISIBILITY ==========
+        function openFeedback() {
+            document.getElementById('feedbackModal').classList.add('active');
+        }
+
+        function closeFeedback() {
+            document.getElementById('feedbackModal').classList.remove('active');
+        }
+
+        function updateRating(type) {
+            const id = type + 'Rating';
+            const val = document.getElementById(id).value;
+            document.getElementById(type + 'Display').textContent = `${val}/10`;
+        }
+
+        function submitFeedback() {
+            const story = document.getElementById('storyRating').value;
+            const art = document.getElementById('artRating').value;
+            const char = document.getElementById('charRating').value;
+            const thoughts = document.getElementById('thoughts').value.trim();
+
+            const manga = state.mangas[state.currentManga];
+            manga.feedback = {
+                story,
+                art,
+                char,
+                thoughts,
+                user: state.user.username,
+                mangaTitle: manga.title,
+                mangaAuthor: manga.author,
+                date: new Date().toLocaleDateString(),
+                visibleTo: [state.user.username, ...state.user.friends] // Only user + friends
+            };
+
+            state.user.feedbacks++;
+            saveState();
+            closeFeedback();
+
+            alert(`✓ Feedback Locked!\n\n📖 ${manga.title}\nBy: ${manga.author}\n\nRatings:\nStory: ${story}/10\nArt: ${art}/10\nCharacters: ${char}/10\n\n🔒 Visible only to you and your friends!`);
+            showToast('✓ Feedback submitted!');
+        }
+
+        function canSeeFeedback(mangaAuthor) {
+            if (!state.user) return false;
+            // Assuming mangaAuthor is the uploader
+            return state.user.username === mangaAuthor || state.user.friends.includes(mangaAuthor);
+        }
+
+        // ========== PROFILE WITH ADVANCED FEATURES ==========
+        function updateProfile() {
+            if (!state.user) return;
+
+            document.getElementById('profileName').textContent = state.user.username;
+            document.getElementById('profileEmail').textContent = state.user.email;
+            document.getElementById('profileAvatar').textContent = state.user.profilePic || state.user.avatar || '👤';
+            document.getElementById('mangaCount').textContent = state.user.mangas;
+            document.getElementById('friendCount').textContent = state.user.friends.length;
+            document.getElementById('feedbackCount').textContent = state.user.feedbacks;
+
+            // Show IP if available
+            const ipDisplay = document.getElementById('userIPDisplay');
+            if (ipDisplay && state.user.ip) {
+                ipDisplay.textContent = `🔒 Last Login IP: ${state.user.ip}`;
+            }
+
+            if (state.user.friends.length > 0) {
+                document.getElementById('friendsList').innerHTML = state.user.friends.map(f => `
+                    <div class="friend-card">
+                        <div class="friend-avatar">👤</div>
+                        <div class="friend-name">${f}</div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function editProfile() {
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.id = 'editProfileModal';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-title">✏️ Edit Profile</div>
+                    <div class="form-group">
+                        <label class="form-label">Profile Picture (Image File)</label>
+                        <input type="file" id="profilePicInput" class="form-input" accept="image/*" onchange="handleProfilePictureUpload(event)">
+                        <div class="profile-preview-container">
+                            <div class="profile-pic-display" id="previewPic">${state.user.profilePic || state.user.avatar || '👤'}</div>
+                            <p class="profile-pic-text">Current profile picture</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Location</label>
+                        <input type="text" id="editLocation" class="form-input" placeholder="City/Country" value="${state.user.location || ''}">
+                    </div>
+                    <div class="modal-buttons">
+                        <button type="button" class="btn-primary" onclick="saveProfileChanges()">✓ Save Changes</button>
+                        <button type="button" class="btn-secondary" onclick="document.getElementById('editProfileModal').remove()">✕ Cancel</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function handleProfilePictureUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (evt) => {
+                // Show preview
+                const preview = document.getElementById('previewPic');
+                if (preview) {
+                    preview.innerHTML = `<img src="${evt.target.result}" class="profile-pic-img">`;
+                }
+                // Store in state (limit size)
+                const base64 = evt.target.result.substring(0, 100000); // Limit to 100KB
+                state.user.profilePicBase64 = base64;
+            };
+
+            reader.readAsDataURL(file);
+        }
+
+        function saveProfileChanges() {
+            const location = document.getElementById('editLocation').value.trim() || 'Unknown';
+            state.user.location = location;
+            if (state.user.profilePicBase64) {
+                state.user.profilePic = state.user.profilePicBase64;
+            }
+            saveState();
+            updateProfile();
+            document.getElementById('editProfileModal').remove();
+            showToast('✓ Profile updated!');
+        }
+
+        // ========== DISCOVER ==========
+        function updateNearbyUsers() {
+            state.nearbyUsers = [];
+            const locations = ['Delhi', 'Mumbai', 'Bangalore', 'Pune', 'Hyderabad', 'Chennai'];
+            const avatars = ['😀', '😎', '🤓', '😊', '🥸', '😇'];
+
+            for (let i = 0; i < 8; i++) {
+                state.nearbyUsers.push({
+                    id: i,
+                    username: `User${Math.random().toString(36).substring(7)}`,
+                    location: locations[Math.floor(Math.random() * locations.length)],
+                    avatar: avatars[Math.floor(Math.random() * avatars.length)]
+                });
+            }
+
+            const grid = document.getElementById('nearbyUsers');
+            grid.innerHTML = state.nearbyUsers.map(u => `
+                <div class="user-card">
+                    <div class="user-avatar">${u.avatar}</div>
+                    <div class="user-name">${u.username}</div>
+                    <div class="user-location">📍 ${u.location}</div>
+                    <button class="friend-btn" onclick="addFriend('${u.username}')">+ Add Friend</button>
+                </div>
+            `).join('');
+        }
+
+        function addFriend(username) {
+            if (!state.user.friends.includes(username)) {
+                state.user.friends.push(username);
+                saveState();
+                updateProfile();
+                showToast(`Added ${username} as friend!`);
+
+                const btn = event.target;
+                btn.textContent = '✓ Added';
+                btn.classList.add('added');
+                btn.disabled = true;
+            }
+        }
+
+        // ========== CHAT ==========
+        function sendMessage() {
+            const msg = document.getElementById('msgInput').value.trim();
+            const type = document.getElementById('chatType').value;
+
+            if (!msg) return;
+
+            const messages = document.getElementById('chatMessages');
+            const div = document.createElement('div');
+            div.className = 'msg sent';
+
+            const bubble = document.createElement('div');
+            bubble.className = 'msg-bubble';
+            bubble.textContent = msg;
+
+            const badge = document.createElement('div');
+            badge.className = 'encryption-badge';
+            badge.textContent = type === 'private' ? '🔒 E2E Encrypted' : '';
+
+            div.appendChild(bubble);
+            if (type === 'private') div.appendChild(badge);
+
+            messages.appendChild(div);
+            messages.scrollTop = messages.scrollHeight;
+            document.getElementById('msgInput').value = '';
+        }
+
+        // ========== HELPERS ==========
+        function showToast(msg) {
+            const div = document.createElement('div');
+            div.className = 'success-toast';
+            div.textContent = msg;
+            document.body.appendChild(div);
+            setTimeout(() => div.remove(), 3000);
+        }
+
+        // ========== INIT ==========
+        loadState();
+        if (state.user) {
+            document.getElementById('authModal').classList.remove('active');
+            updateProfile();
+            updateNearbyUsers();
+            updateShowcase();
+            startAutoRefresh();
+        }
+    </script>
+</body>
+</html>
